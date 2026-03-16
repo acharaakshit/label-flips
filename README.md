@@ -31,6 +31,8 @@ The paper studies two foreground segmentation settings with two confusable foreg
 - `Waterbirds-Seg`: a segmentation adaptation of Waterbirds with land/water scene context
 - `COCO-CD`: a cat vs dog setting from COCO with coarse indoor/outdoor context derived from COCO-Stuff
 
+Please cite the underlying datasets used in this repository, including CUB-200-2011, Places365, MS COCO, and COCO-Stuff.
+
 You can download the CUB, Places365, and COCO/COCO-Stuff archives with:
 
 ```bash
@@ -63,6 +65,8 @@ Generate:
 ### COCO-CD
 
 Download and extract MS COCO 2017 images and annotations, plus COCO-Stuff annotations for the same splits.
+
+COCO-CD is derived from MS COCO and COCO-Stuff.
 
 The generator expects:
 - `--coco-root` pointing at the COCO directory containing `train2017/`, `val2017/`, and `annotations/instances_*.json`
@@ -97,6 +101,7 @@ Train `COCO-CD`:
 ```bash
 ./scripts/train.sh \
   --dataset coco_cd \
+  --data_root /path/to/output/coco_cd \
   --coco-root /path/to/coco \
   --model-name resnet \
   --kind CE \
@@ -119,10 +124,13 @@ Evaluate `COCO-CD`:
 ```bash
 ./scripts/test.sh \
   --dataset coco_cd \
+  --data_root /path/to/output/coco_cd \
   --coco-root /path/to/coco \
   --model-name resnet \
   --checkpoint /path/to/checkpoints/best_model_resnet_ce.pt
 ```
+
+If `--data_root` is omitted for `COCO-CD`, training and evaluation use the bundled shared annotations in `annotations/coco_cd/`.
 
 Evaluation reports:
 - class-wise IoU
