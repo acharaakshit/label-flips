@@ -254,7 +254,12 @@ def main():
     )
 
     model = make_model(args.model_name, data["num_classes"], device)
-    state = torch.load(args.checkpoint, map_location=device)
+
+    try:
+        state = torch.load(args.checkpoint, map_location=device, weights_only=False)
+    except TypeError:
+        state = torch.load(args.checkpoint, map_location=device)
+
     model.load_state_dict(state)
 
     evaluate(model, test_loader, device, data["num_classes"], args.dataset)
