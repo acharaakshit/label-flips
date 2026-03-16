@@ -31,21 +31,19 @@ The paper studies two foreground segmentation settings with two confusable foreg
 - `Waterbirds-Seg`: a segmentation adaptation of Waterbirds with land/water scene context
 - `COCO-CD`: a cat vs dog setting from COCO with coarse indoor/outdoor context derived from COCO-Stuff
 
-You can download the CUB and COCO/COCO-Stuff archives with:
+You can download the CUB, Places365, and COCO/COCO-Stuff archives with:
 
 ```bash
 ./scripts/download_datasets.sh /path/to/raw_data
 ```
 
-Provide `Places365` separately for `Waterbirds-Seg`.
-
 ### Waterbirds-Seg
 
-Download and extract `CUB_200_2011` and a local copy of `Places365`, then pass those roots as `--cub-dir` and `--places-dir`.
+Download and extract `CUB_200_2011` and `Places365`, then pass those roots as `--cub-dir` and `--places-dir`.
 
 The generator expects:
 - CUB under `/path/to/CUB_200_2011`
-- Places images under `/path/to/places365`
+- Places images under the extracted Places root, such as `/path/to/places365_standard`
 
 Supported Waterbirds-Seg correlations in this repo are `0.5` and `0.95`.
 
@@ -55,8 +53,9 @@ Generate:
 
 ```bash
 ./scripts/generate_datasets.sh \
+  waterbirds_seg \
   --cub-dir /path/to/CUB_200_2011 \
-  --places-dir /path/to/places365 \
+  --places-dir /path/to/places365_standard \
   --output-dir /path/to/output \
   --correlation 0.95
 ```
@@ -72,7 +71,8 @@ The generator expects:
 Generate:
 
 ```bash
-python -m segshort.dataset_generation.generate_coco_cd \
+./scripts/generate_datasets.sh \
+  coco_cd \
   --coco-root /path/to/coco \
   --stuff-annotations-dir /path/to/coco_stuff/annotations \
   --output-dir /path/to/output/coco_cd \

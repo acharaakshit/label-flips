@@ -73,6 +73,23 @@ def print_split_stats(df):
         )
 
 
+def resolve_place_path(places_dir, place_filename):
+    relative_path = place_filename.lstrip("/")
+    easyformat_path = os.path.join(places_dir, relative_path)
+    if os.path.exists(easyformat_path):
+        return easyformat_path
+
+    path_parts = relative_path.split("/")
+    category = "-".join(path_parts[1:-1])
+    image_name = path_parts[-1]
+    for split in ("train", "val"):
+        standard_path = os.path.join(places_dir, split, category, image_name)
+        if os.path.exists(standard_path):
+            return standard_path
+
+    raise FileNotFoundError(f"Could not find Places image for {place_filename} under {places_dir}.")
+
+
 def render_example(row, cub_dir, places_dir, images_dir, masks_dir):
     img_path = os.path.join(cub_dir, "images", row.img_filename)
     seg_path = os.path.join(
@@ -81,7 +98,7 @@ def render_example(row, cub_dir, places_dir, images_dir, masks_dir):
     img_np = np.asarray(Image.open(img_path).convert("RGB"))
     seg_np = np.asarray(Image.open(seg_path).convert("RGB")) / 255
 
-    place_path = os.path.join(places_dir, row.place_filename[1:])
+    place_path = resolve_place_path(places_dir, row.place_filename)
     place = Image.open(place_path).convert("RGB")
 
     img_black = Image.fromarray(np.around(img_np * seg_np).astype(np.uint8))
